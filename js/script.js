@@ -78,11 +78,15 @@ async function displayPopularShows(){
 //display movie details
 async function displayMovieDetails() {
     const movieId = window.location.search.split('=')[1];//output of window.location.search => ?id=823464
+    console.log('in movie details page')
     console.log(movieId)
 
     const movie = await fetchAPIData(`movie/${movieId}`);
     console.log(movie)
     console.log(movie.genres)
+
+    //Overlay for background image
+    displayBackgroundImage('movie',movie.backdrop_path)
     const div = document.createElement('div');
     div.innerHTML = `
     <div class="details-top">
@@ -133,6 +137,33 @@ async function displayMovieDetails() {
 
 function addCommasToNumber(number){
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+//display backdrop on details page
+function displayBackgroundImage(type, backgroundPath){
+    console.log('display background image');
+    console.log(backgroundPath)
+    const overlayDiv = document.createElement('div');
+    overlayDiv.style.backgroundImage = `url(https://image.tmdb.org/t/p/original/${backgroundPath})`;
+    overlayDiv.style.backgroundSize = 'cover';
+    overlayDiv.style.backgroundPosition = 'center';
+    overlayDiv.style.backgroundRepeat = 'no-repeat';
+    overlayDiv.style.height = '100vh';
+    overlayDiv.style.width = '100vw';
+    overlayDiv.style.position = 'absolute';
+    overlayDiv.style.top = '0';
+    overlayDiv.style.left = '0';
+    overlayDiv.style.zIndex = '-1';
+    overlayDiv.style.opacity = '0.1';
+
+    if(type === 'movie'){
+        console.log('display background image movie');
+        document.querySelector('#movie-details').appendChild(overlayDiv);
+    }
+    else{
+        console.log('display background show');
+        document.querySelector('#show-details').appendChild(overlayDiv);
+    }
 }
 //fetch data from TMDB API
 async function fetchAPIData(endpoint) {
