@@ -75,6 +75,41 @@ async function displayPopularShows(){
     });
 }
 
+async function displayPopularShows(){
+    console.log('display popular shows')
+    const result= await fetchAPIData('tv/popular'); //output = {page: 1, results: Array(20), total_pages: 43380, total_results: 867583}
+    const { results } = await fetchAPIData('tv/popular'); //curly braces around results to get the array of results(movies) directly
+    console.log(results)
+    console.log(result)
+
+    results.forEach(show => {
+        const div = document.createElement('div');
+        div.classList.add('card');
+        div.innerHTML = `
+        <a href="tv-details.html?id=${show.id}">
+          ${
+            show.poster_path
+            ? `<img src="https://image.tmdb.org/t/p/w500${show.poster_path}" class="card-img-top" alt="${show.title}" />` : `
+            <img
+            src="images/no-image.jpg"
+            class="card-img-top"
+            alt="Movie Title"
+          />
+            `
+          }
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">${show.title}</h5>
+          <p class="card-text">
+            <small class="text-muted">Release: ${show.release_date}</small>
+          </p>
+        </div>
+        `;
+
+    document.querySelector('#popular-movies').appendChild(div);
+    });
+}
+
 //fetch data from TMDB API
 async function fetchAPIData(endpoint) {
     const API_KEY = '3e7aa45f43cc96777cf7126767f67911';
